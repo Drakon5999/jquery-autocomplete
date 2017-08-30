@@ -62,7 +62,7 @@
         that.suggestions = [];
         that.badQueries = [];
         that.selectedIndex = -1;
-        that.currentValue = that.element.value;
+        that.currentValue = that.element;
         that.timeoutId = null;
         that.cachedResponse = {};
         that.onChangeTimeout = null;
@@ -126,7 +126,7 @@
     };
 
     function _lookupFilter(suggestion, originalQuery, queryLowerCase) {
-        return suggestion.value.toLowerCase().indexOf(queryLowerCase) !== -1;
+        return suggestion.toLowerCase().indexOf(queryLowerCase) !== -1;
     };
 
     function _transformResult(response) {
@@ -136,12 +136,12 @@
     function _formatResult(suggestion, currentValue) {
         // Do not replace anything if the current value is empty
         if (!currentValue) {
-            return suggestion.value;
+            return suggestion;
         }
         
         var pattern = '(' + utils.escapeRegExChars(currentValue) + ')';
 
-        return suggestion.value
+        return suggestion
             .replace(new RegExp(pattern, 'gi'), '<strong>$1<\/strong>')
             .replace(/&/g, '&amp;')
             .replace(/</g, '&lt;')
@@ -487,7 +487,7 @@
         isExactMatch: function (query) {
             var suggestions = this.suggestions;
 
-            return (suggestions.length === 1 && suggestions[0].value.toLowerCase() === query.toLowerCase());
+            return (suggestions.length === 1 && suggestions[0].toLowerCase() === query.toLowerCase());
         },
 
         getQuery: function (value) {
@@ -746,7 +746,7 @@
             }
 
             $.each(that.suggestions, function (i, suggestion) {
-                var foundMatch = suggestion.value.toLowerCase().indexOf(value) === 0;
+                var foundMatch = suggestion.toLowerCase().indexOf(value) === 0;
                 if (foundMatch) {
                     bestMatch = suggestion;
                 }
@@ -760,7 +760,7 @@
             var hintValue = '',
                 that = this;
             if (suggestion) {
-                hintValue = that.currentValue + suggestion.value.substr(that.currentValue.length);
+                hintValue = that.currentValue + suggestion.substr(that.currentValue.length);
             }
             if (that.hintValue !== hintValue) {
                 that.hintValue = hintValue;
@@ -898,7 +898,7 @@
             }
 
             if (!that.options.preserveInput) {
-                that.el.val(that.getValue(that.suggestions[index].value));
+                that.el.val(that.getValue(that.suggestions[index]));
             }
             that.signalHint(null);
         },
@@ -908,7 +908,7 @@
                 onSelectCallback = that.options.onSelect,
                 suggestion = that.suggestions[index];
 
-            that.currentValue = that.getValue(suggestion.value);
+            that.currentValue = that.getValue(suggestion);
 
             if (that.currentValue !== that.el.val() && !that.options.preserveInput) {
                 that.el.val(that.currentValue);
